@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>카드뉴스 기획안 스토리보드</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Noto+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root{
+    --kraft:#EDE4D2; --kraft-dark:#DED0B4;
+    --ink:#242320; --ink-soft:#55524A;
+    --red:#B8391A; --teal:#33504F;
+    --card:#FBF8F1; --shadow:rgba(36,35,32,0.18);
+    --line:rgba(36,35,32,0.16);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:var(--kraft);
+    font-family:'Noto Sans KR',sans-serif;color:var(--ink);
+    min-height:100vh;padding:28px 16px 90px;
+  }
+  .wrap{max-width:880px;margin:0 auto;}
+
+  /* ---------- CONFIG NOTICE ---------- */
+  #config-warning{
+    display:none;background:var(--red);color:var(--card);
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+    padding:10px 16px;margin-bottom:16px;line-height:1.6;
+  }
+  #config-warning.show{display:block;}
+
+  header{margin-bottom:22px;}
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:0.16em;
+    text-transform:uppercase;color:var(--red);font-weight:500;
+    display:flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{content:"";width:22px;height:2px;background:var(--red);display:inline-block;}
+  h1{font-family:'Noto Serif KR',serif;font-weight:900;font-size:clamp(24px,4vw,34px);margin:8px 0 4px;}
+  .sub{color:var(--ink-soft);font-size:13.5px;line-height:1.6;}
+
+  /* ---------- intake ---------- */
+  .intake{
+    background:var(--card);border:1px solid var(--line);
+    box-shadow:0 1px 0 var(--line),0 14px 30px -22px var(--shadow);
+    padding:22px 22px 18px;position:relative;margin-bottom:24px;
+  }
+  .intake::before{
+    content:"모둠 확인";position:absolute;top:-12px;left:20px;
+    background:var(--red);color:var(--card);
+    font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:0.08em;
+    padding:4px 10px;
+  }
+  .intake-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 16px;align-items:end;}
+  .field{display:flex;flex-direction:column;gap:5px;}
+  label{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ink-soft);
+    letter-spacing:0.04em;
+  }
+  label .req{color:var(--red);}
+  select,input[type=text]{
+    font-family:'Noto Sans KR',sans-serif;font-size:14px;
+    border:none;border-bottom:1.5px solid var(--line);background:transparent;
+    padding:6px 2px 7px;color:var(--ink);outline:none;
+  }
+  select:focus,input[type=text]:focus{border-bottom-color:var(--red);}
+  select{cursor:pointer;}
+  .intake-footer{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-top:16px;padding-top:14px;border-top:1px dashed var(--line);flex-wrap:wrap;gap:10px;
+  }
+  .status-line{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-soft);}
+  .status-line b{color:var(--teal);}
+
+  button.primary{
+    font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:0.03em;
+    background:var(--ink);color:var(--card);border:none;padding:10px 18px;
+    cursor:pointer;transition:background .15s ease;
+  }
+  button.primary:hover{background:var(--red);}
+  button.primary:disabled{background:#a9a396;cursor:wait;}
+
+  /* ---------- meta fields (주제/타겟/의도) ---------- */
+  #meta-section{display:none;}
+  #meta-section.show{display:block;}
+  .meta-box{
+    background:var(--card);border:1px solid var(--line);
+    padding:18px 20px;margin-bottom:20px;
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;
+  }
+  .meta-box .field label{margin-bottom:4px;}
+  .meta-box textarea{
+    font-family:'Noto Sans KR',sans-serif;font-size:13.5px;line-height:1.5;
+    border:none;border-bottom:1.5px solid var(--line);background:transparent;
+    padding:4px 2px 6px;resize:vertical;min-height:38px;color:var(--ink);outline:none;
+  }
+  .meta-box textarea:focus{border-bottom-color:var(--red);}
+
+  /* ---------- deck ---------- */
+  #deck{display:none;flex-direction:column;gap:20px;}
+  #deck.show{display:flex;}
+
+  .panel{
+    background:var(--card);border:1px solid var(--line);
+    box-shadow:0 12px 26px -22px var(--shadow);
+    display:grid;grid-template-columns:104px 1fr;
+  }
+  .panel-num{
+    background:var(--ink);color:var(--kraft);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    padding:16px 8px;border-right:1px dashed rgba(237,228,210,0.3);
+  }
+  .panel-num .n{font-family:'Noto Serif KR',serif;font-weight:900;font-size:26px;line-height:1;}
+  .panel-num .type{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.02em;
+    color:var(--red);background:rgba(251,248,241,0.9);padding:3px 6px;text-align:center;line-height:1.4;
+  }
+  .panel:nth-child(1) .panel-num{background:var(--red);}
+  .panel:nth-child(10) .panel-num{background:var(--teal);}
+
+  .panel-body{padding:18px 20px;display:flex;flex-direction:column;gap:12px;}
+  .guide{
+    font-size:12.5px;color:var(--ink-soft);line-height:1.6;
+    border-left:2px solid var(--line);padding-left:10px;
+  }
+  .field-block{display:flex;flex-direction:column;gap:5px;}
+  .field-block label{
+    font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--ink-soft);
+    letter-spacing:0.03em;text-transform:uppercase;
+  }
+  textarea.panel-input{
+    font-family:'Noto Sans KR',sans-serif;font-size:14px;line-height:1.6;
+    border:1.5px solid var(--line);background:transparent;color:var(--ink);
+    padding:9px 11px;resize:vertical;min-height:56px;outline:none;
+  }
+  textarea.panel-input:focus{border-color:var(--red);}
+  textarea.desc-input{min-height:70px;}
+  textarea.phrase-input{min-height:52px;}
+  textarea.image-input{min-height:60px;border-color:var(--teal);}
+  textarea.image-input:focus{border-color:var(--red);}
+  .image-example{
+    font-size:12px;color:var(--ink-soft);line-height:1.6;
+    background:var(--kraft);border-left:2px solid var(--teal);
+    padding:7px 10px;font-style:italic;
+  }
+  .image-example b{
+    font-style:normal;color:var(--teal);font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;letter-spacing:0.02em;
+  }
+
+  /* ---------- footer actions ---------- */
+  .deck-footer{
+    display:none;margin-top:26px;padding-top:20px;border-top:1px dashed var(--line);
+    align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  }
+  .deck-footer.show{display:flex;}
+  .btn-group{display:flex;gap:10px;}
+  button.ghost{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:0.02em;
+    background:transparent;border:1px solid var(--ink);color:var(--ink);
+    padding:10px 16px;cursor:pointer;transition:all .15s ease;
+  }
+  button.ghost:hover{background:var(--ink);color:var(--card);}
+  button.submit{
+    font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:0.02em;
+    background:var(--teal);color:var(--card);border:none;
+    padding:10px 18px;cursor:pointer;transition:opacity .15s ease;
+  }
+  button.submit:hover{opacity:0.85;}
+
+  footer.note{
+    margin-top:32px;font-size:11.5px;color:var(--ink-soft);
+    font-family:'IBM Plex Mono',monospace;line-height:1.7;
+    border-top:1px dashed var(--line);padding-top:12px;
+  }
+
+  @media (max-width:720px){
+    .intake-grid{grid-template-columns:1fr 1fr;}
+    .meta-box{grid-template-columns:1fr;}
+    .panel{grid-template-columns:1fr;}
+    .panel-num{flex-direction:row;border-right:none;border-bottom:1px dashed rgba(237,228,210,0.3);padding:10px 16px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="config-warning">
+    ※ 설정 필요: 이 파일 하단 스크립트의 CONFIG.SCRIPT_URL 값이 아직 Apps Script 배포 URL로 채워지지 않았습니다. Code.gs를 배포한 뒤 그 웹 앱 URL로 교체해주세요.
+  </div>
+
+  <header>
+    <div class="eyebrow">사회문제탐구 · 카드뉴스 프로젝트</div>
+    <h1>카드뉴스 기획안 스토리보드</h1>
+    <p class="sub">모둠별로 반 / 모둠번호 / 학번 / 이름을 확인한 뒤, 순서대로 기획안을 채워주세요. 저장은 몇 번이든 다시 눌러도 됩니다.</p>
+  </header>
+
+  <div class="intake">
+    <div class="intake-grid">
+      <div class="field">
+        <label>반 <span class="req">*</span></label>
+        <select id="f-ban">
+          <option value="">선택</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="E">E</option>
+          <option value="G">G</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>모둠번호 <span class="req">*</span></label>
+        <select id="f-modum">
+          <option value="">선택</option>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+          <option value="6">6</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>학번 <span class="req">*</span></label>
+        <input type="text" id="f-hakbun" placeholder="예: 10305" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label>이름 <span class="req">*</span></label>
+        <input type="text" id="f-ireum" placeholder="예: 김OO">
+      </div>
+    </div>
+    <div class="intake-footer">
+      <span class="status-line" id="intake-status">반/모둠번호/학번/이름을 입력하고 시작해주세요.</span>
+      <button class="primary" id="btn-start">불러오기 / 시작하기</button>
+    </div>
+  </div>
+
+  <div class="meta-box" id="meta-section">
+    <div class="field">
+      <label>카드뉴스 주제</label>
+      <textarea id="m-topic" placeholder="예: 청소년 SNS 중독과 또래관계 변화"></textarea>
+    </div>
+    <div class="field">
+      <label>타겟</label>
+      <textarea id="m-target" placeholder="예: 고등학교 1학년 학생"></textarea>
+    </div>
+    <div class="field">
+      <label>의도/목적</label>
+      <textarea id="m-intent" placeholder="예: 문제의식 환기 후 실천 행동 유도"></textarea>
+    </div>
+  </div>
+
+  <div id="deck"></div>
+
+  <div class="deck-footer" id="deck-footer">
+    <span class="status-line" id="save-status"></span>
+    <div class="btn-group">
+      <button class="ghost" id="btn-save">임시저장</button>
+      <button class="submit" id="btn-submit">제출완료로 표시</button>
+    </div>
+  </div>
+
+  <footer class="note">
+    TIP · 데이터 · 원인분석 카드는 "왜 그렇게 생각했는지"를 먼저 적고, 그다음 카드뉴스에 들어갈 짧은 문구를 써주세요.<br>
+    제출완료를 눌러도 이후에 계속 수정하고 다시 저장할 수 있습니다.
+  </footer>
+
+</div>
+
+<script>
+const CONFIG = {
+  // Code.gs를 배포한 뒤 나오는 웹 앱 URL로 아래 값을 교체하세요.
+  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxUOF2Nce_M3D60nU6-hJUcbrnKglz2x9Q0UWFizyiELhztAwXAypwvnnrn0P75_5IfBA/exec"
+};
+
+const FRAMEWORK = [
+  { n:1,  type:"제목",       guide:"카드뉴스 전체를 대표하는 훅이 되는 제목을 적어보세요.", kind:"simple", key:"card1_title",
+    imageKey:"card1_image",
+    imageExample:"스마트폰 화면 불빛만 켜진 어두운 방에서 혼자 앉아있는 학생의 뒷모습. 화면 속 빛이 얼굴 옆면만 비추는 구도. 차갑고 어두운 파란 톤. 사진 스타일." },
+  { n:2,  type:"문제상황",   guide:"타겟이 체감할 수 있는 구체적인 문제 장면을 적어보세요.", kind:"simple", key:"card2_problem",
+    imageKey:"card2_image",
+    imageExample:"카페 테이블에 다섯 명이 마주 앉아 있지만 다들 각자 폰만 보고 있는 장면. 위에서 내려다본 구도(버즈아이뷰). 무채색 톤. 일러스트 스타일." },
+  { n:3,  type:"데이터",     guide:"이 문제를 뒷받침할 통계나 근거를 어디서, 왜 골랐는지 먼저 설명하고, 그다음 카드에 들어갈 문구를 적으세요.", kind:"dual", descKey:"card3_desc", phraseKey:"card3_data",
+    imageKey:"card3_image",
+    imageExample:"막대그래프 위로 스마트폰 아이콘이 쌓여 올라가는 형태의 인포그래픽. 밝은 배경에 포인트 컬러 한 가지만 강조. 아이콘/인포그래픽 스타일." },
+  { n:4,  type:"심층이해",   guide:"문제를 더 깊이 이해시키는 배경이나 맥락을 적어보세요.", kind:"simple", key:"card4_deepen",
+    imageKey:"card4_image",
+    imageExample:"뇌 모양 안에서 빛이 반짝이며 퍼져나가는 이미지. 중심에서 바깥으로 따뜻한 주황빛이 확산되는 구도. 개념도/일러스트 스타일." },
+  { n:5,  type:"원인분석 1", guide:"첫 번째 원인(개인적/미시적 차원)을 왜 그렇게 판단했는지 먼저 설명하고, 문구를 적으세요.", kind:"dual", descKey:"card5_desc", phraseKey:"card5_cause1",
+    imageKey:"card5_image",
+    imageExample:"이불 속에서 몰래 폰을 보는 실루엣. 어두운 방에 작은 화면 불빛만 보이는 구도. 실루엣 일러스트 스타일." },
+  { n:6,  type:"원인분석 2", guide:"두 번째 원인(사회적/구조적 차원)을 왜 그렇게 판단했는지 먼저 설명하고, 문구를 적으세요.", kind:"dual", descKey:"card6_desc", phraseKey:"card6_cause2",
+    imageKey:"card6_image",
+    imageExample:"교실에서 친구들이 같은 화면(단체 채팅방)을 보며 서로 눈치를 보는 표정. 정면 구도. 파스텔톤 일러스트 스타일." },
+  { n:7,  type:"원인분석 3", guide:"세 번째 원인(제도적/문화적 차원)을 왜 그렇게 판단했는지 먼저 설명하고, 문구를 적으세요.", kind:"dual", descKey:"card7_desc", phraseKey:"card7_cause3",
+    imageKey:"card7_image",
+    imageExample:"학교 규정집과 스마트폰이 나란히 놓인 정지 이미지(플랫레이). 위에서 내려다본 구도. 회색조와 베이지 톤으로 딱딱한 느낌 강조. 사진 스타일." },
+  { n:8,  type:"현재 해결 제시", guide:"현재 시행 중인 대책과 그 한계를 적어보세요.", kind:"simple", key:"card8_current",
+    imageKey:"card8_image",
+    imageExample:"보관함에 나란히 넣어진 스마트폰 여러 대를 가까이서 찍은 클로즈업. 차분한 회색 배경. 사진 스타일." },
+  { n:9,  type:"대안 제시",  guide:"더 나은 대안이나 새로운 접근을 적어보세요.", kind:"simple", key:"card9_alt",
+    imageKey:"card9_image",
+    imageExample:"친구들이 스마트폰 대신 책이나 보드게임을 함께 즐기는 모습. 밝고 따뜻한 색감. 사진 스타일." },
+  { n:10, type:"행동 촉구",  guide:"타겟이 지금 바로 실천할 수 있는 구체적 행동을 적어보세요.", kind:"simple", key:"card10_cta",
+    imageKey:"card10_image",
+    imageExample:"손가락이 스마트폰의 '방해금지 모드' 버튼을 누르는 순간의 클로즈업. 손가락과 버튼만 컬러로 강조하고 나머지는 흑백 처리." }
+];
+
+const $ = id => document.getElementById(id);
+let currentStatus = "";
+
+function checkConfig(){
+  if(CONFIG.SCRIPT_URL.indexOf("여기에_배포된") === 0){
+    $("config-warning").classList.add("show");
+    return false;
+  }
+  return true;
+}
+
+function imageBlockHTML(f){
+  return `
+      <div class="field-block">
+        <label>이미지 아이디어</label>
+        <div class="image-example"><b>예시</b> ${f.imageExample}</div>
+        <textarea class="panel-input image-input" data-field="${f.imageKey}" placeholder="피사체 / 구도 / 색감·분위기 / 스타일 순서로 적어보세요."></textarea>
+      </div>`;
+}
+
+function panelHTML(f){
+  if(f.kind === "simple"){
+    return `
+    <div class="panel" data-key="${f.key}">
+      <div class="panel-num"><div class="n">${String(f.n).padStart(2,"0")}</div><div class="type">${f.type}</div></div>
+      <div class="panel-body">
+        <div class="guide">${f.guide}</div>
+        <div class="field-block">
+          <label>카드 문구</label>
+          <textarea class="panel-input phrase-input" data-field="${f.key}"></textarea>
+        </div>
+        ${imageBlockHTML(f)}
+      </div>
+    </div>`;
+  }
+  return `
+  <div class="panel" data-key="${f.descKey}|${f.phraseKey}">
+    <div class="panel-num"><div class="n">${String(f.n).padStart(2,"0")}</div><div class="type">${f.type}</div></div>
+    <div class="panel-body">
+      <div class="guide">${f.guide}</div>
+      <div class="field-block">
+        <label>내용 서술 (왜 그렇게 생각했는지)</label>
+        <textarea class="panel-input desc-input" data-field="${f.descKey}"></textarea>
+      </div>
+      <div class="field-block">
+        <label>카드 문구</label>
+        <textarea class="panel-input phrase-input" data-field="${f.phraseKey}"></textarea>
+      </div>
+      ${imageBlockHTML(f)}
+    </div>
+  </div>`;
+}
+
+function renderDeck(){
+  $("deck").innerHTML = FRAMEWORK.map(panelHTML).join("");
+  $("deck").classList.add("show");
+  $("meta-section").classList.add("show");
+  $("deck-footer").classList.add("show");
+}
+
+function fillForm(data){
+  $("m-topic").value = data.topic || "";
+  $("m-target").value = data.target || "";
+  $("m-intent").value = data.intent || "";
+  document.querySelectorAll("[data-field]").forEach(el=>{
+    const key = el.dataset.field;
+    el.value = data[key] || "";
+  });
+  currentStatus = data.status || "";
+  updateSaveStatus(data.updated_at, data.status);
+}
+
+function updateSaveStatus(updatedAt, status){
+  const parts = [];
+  if(status) parts.push(`현재 상태: <b>${status}</b>`);
+  if(updatedAt) parts.push(`최종수정: ${new Date(updatedAt).toLocaleString('ko-KR')}`);
+  $("save-status").innerHTML = parts.join(" · ");
+}
+
+function collectPayload(status){
+  const payload = {
+    ban: $("f-ban").value,
+    modum: $("f-modum").value,
+    hakbun: $("f-hakbun").value.trim(),
+    ireum: $("f-ireum").value.trim(),
+    topic: $("m-topic").value,
+    target: $("m-target").value,
+    intent: $("m-intent").value,
+    status: status
+  };
+  document.querySelectorAll("[data-field]").forEach(el=>{
+    payload[el.dataset.field] = el.value;
+  });
+  return payload;
+}
+
+async function loadExisting(ban, modum){
+  const url = `${CONFIG.SCRIPT_URL}?ban=${encodeURIComponent(ban)}&modum=${encodeURIComponent(modum)}`;
+  const res = await fetch(url);
+  return await res.json();
+}
+
+async function saveData(status){
+  const payload = collectPayload(status);
+  const res = await fetch(CONFIG.SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+  return await res.json();
+}
+
+$("btn-start").addEventListener("click", async ()=>{
+  const ban = $("f-ban").value;
+  const modum = $("f-modum").value;
+  const hakbun = $("f-hakbun").value.trim();
+  const ireum = $("f-ireum").value.trim();
+
+  if(!ban || !modum || !hakbun || !ireum){
+    alert("반, 모둠번호, 학번, 이름을 모두 입력해주세요.");
+    return;
+  }
+  if(!checkConfig()) return;
+
+  $("btn-start").disabled = true;
+  $("intake-status").textContent = "불러오는 중...";
+
+  try{
+    const result = await loadExisting(ban, modum);
+    if(!FRAMEWORK.length) return;
+    if(!$("deck").classList.contains("show")) renderDeck();
+
+    if(result.found){
+      fillForm(result.data);
+      $("intake-status").innerHTML = `기존 기획안을 불러왔습니다. 모둠원: ${result.data.myeongdan || "-"}`;
+    } else {
+      $("intake-status").textContent = "새 기획안을 시작합니다.";
+    }
+  }catch(e){
+    $("intake-status").textContent = "불러오기 실패: " + e.message;
+  }finally{
+    $("btn-start").disabled = false;
+  }
+});
+
+$("btn-save").addEventListener("click", async ()=>{
+  if(!checkConfig()) return;
+  const ban = $("f-ban").value, modum = $("f-modum").value;
+  const hakbun = $("f-hakbun").value.trim(), ireum = $("f-ireum").value.trim();
+  if(!ban || !modum || !hakbun || !ireum){
+    alert("반/모둠번호/학번/이름을 먼저 입력해주세요.");
+    return;
+  }
+  $("btn-save").disabled = true;
+  $("btn-save").textContent = "저장 중...";
+  try{
+    const statusToSend = currentStatus === "제출완료" ? "제출완료" : "임시저장";
+    const result = await saveData(statusToSend);
+    if(result.ok){
+      currentStatus = statusToSend;
+      updateSaveStatus(new Date().toISOString(), statusToSend);
+    } else {
+      alert("저장 실패: " + (result.error || "알 수 없는 오류"));
+    }
+  }catch(e){
+    alert("저장 중 오류: " + e.message);
+  }finally{
+    $("btn-save").disabled = false;
+    $("btn-save").textContent = "임시저장";
+  }
+});
+
+$("btn-submit").addEventListener("click", async ()=>{
+  if(!checkConfig()) return;
+  const ban = $("f-ban").value, modum = $("f-modum").value;
+  const hakbun = $("f-hakbun").value.trim(), ireum = $("f-ireum").value.trim();
+  if(!ban || !modum || !hakbun || !ireum){
+    alert("반/모둠번호/학번/이름을 먼저 입력해주세요.");
+    return;
+  }
+  if(!confirm("제출완료로 표시할까요? 이후에도 계속 수정하고 저장할 수 있습니다.")) return;
+  $("btn-submit").disabled = true;
+  try{
+    const result = await saveData("제출완료");
+    if(result.ok){
+      currentStatus = "제출완료";
+      updateSaveStatus(new Date().toISOString(), "제출완료");
+    } else {
+      alert("제출 실패: " + (result.error || "알 수 없는 오류"));
+    }
+  }catch(e){
+    alert("제출 중 오류: " + e.message);
+  }finally{
+    $("btn-submit").disabled = false;
+  }
+});
+
+checkConfig();
+</script>
+</body>
+</html>
